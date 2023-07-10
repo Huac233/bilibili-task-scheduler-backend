@@ -12,20 +12,20 @@ ENV PYTHONUNBUFFERED 1
 COPY ./backend/requirements.txt /usr/app/requirements.txt
 
 # alpine apk 换源
-# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
 # install dependencies
 RUN set -eux \
     && apk add --no-cache --virtual .build-deps build-base \
-        libressl-dev libffi-dev gcc musl-dev python3-dev \
+        openssl-dev libffi-dev gcc musl-dev python3-dev \
         postgresql-dev bash \
-    && pip install --upgrade pip setuptools wheel \
-    && pip install -r /usr/app/requirements.txt \
+    && pip install --upgrade pip setuptools wheel -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn \
+    && pip install -r /usr/app/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn \
     && rm -rf /root/.cache/pip
 
 # copy project
-# <<<<<<< HEAD:Dockerfile
+#<<<<<<< HEAD:Dockerfile
 COPY ./ /usr/app/
-# =======
+#=======
 COPY . /usr/app/
-# >>>>>>> 1c949b701be4bfe00aa360eb5d0aadf3678526ca:Dockerfile
+#>>>>>>> 1c949b701be4bfe00aa360eb5d0aadf3678526ca:Dockerfile
